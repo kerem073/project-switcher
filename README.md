@@ -10,25 +10,25 @@ NOTE: when you use the script for the first time, it will make a ".project_switc
 # Usage
 The normal usage:
 ```
-> pjs [<number>|del <number>|save|list]"
+$ pjs [<number>|del <number>|save|list]"
 ```
 
 You can save your current directory like this:
 ```
-> pjs save <ENTER>
-> Saved directory.
+$ pjs save <ENTER>
+$ Saved directory.
 ```
 
 You can list your saved directories like so:
 ```
-> pjs list <ENTER>
-> /user/projects/webserver
+$ pjs list <ENTER>
+$ /user/projects/webserver
   /user/projects/list_of_my_archnemeses
   /user/projects/(ethical)hackerstuff
 ```
 
 And you can switch to directories by entering the number it occurs in the list:
 ```
-> pjs 2 <ENTER>
-> pwd
-> /user/projects/grannies_hip_mri
+$ pjs 2 <ENTER>
+$ pwd
+$ /user/projects/grannies_hip_mri
