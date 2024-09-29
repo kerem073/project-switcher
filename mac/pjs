@@ -14,7 +14,12 @@ if [[ "$1" == "save" ]]; then
     pwd >> $saved_dirs
     echo "Saved currect directory."
 elif [[ "$1" == "list" ]]; then
-    cat $saved_dirs
+    LINE=1
+    while read -r CURRENT_LINE
+        do
+            echo "$LINE: $CURRENT_LINE"
+        ((LINE++))
+    done < "$saved_dirs"
 elif [[ "$1" =~ ^[0-9]+$ ]]; then
     dir=$(sed -n "$1p" $saved_dirs)
     if [[ -d "$dir" ]]; then
