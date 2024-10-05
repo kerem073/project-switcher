@@ -10,41 +10,54 @@ if (-not (Test-Path -Path $projectSwapperFile)) {
     New-Item -ItemType File -Path $projectSwapperFile | Out-Null
 }
 
-$savedDirs = Get-Content $projectSwapperFile
+$savedDirs = @(Get-Content $projectSwapperFile) # when there is one pwd, it puts one string in there and not a Object[]. so the @() makes it a array
 
 if ($args[0] -eq "save") {
     $pwd = (Get-Location).Path
-    $pwd | Out-File -Append -FilePath $projectSwapperFile
+    Add-Content -Path $projectSwapperFile -Value $pwd
     Write-Host "Saved current directory."
-} elseif ($args[0] -eq "list") {
-    Get-Content $projectSwapperFile
-} elseif ($args[0] -match "^\d+$") {
-    $dir = $savedDirs[$args[0] - 1]
-    Write-Host $dir
-    if (Test-Path -Path $dir) {
-        Set-Location $dir
-        Clear-Host
-    } else {
-        Write-Host "Directory not found"
+} 
+elseif ($args[0] -eq "list") {
+    for($i = 0; $i -lt $savedDirs.length; $i += 1){
+        $number = $i + 1
+        Write-Host $number : $savedDirs[$i]
     }
-} elseif ($args[0] -eq "del") {
+}
+elseif ($args[0] -match "^\d+$") {
+    $dirIndex = $args[0] - 1
+    if (($dirIndex -lt 0) -or ($dirIndex -gt $savedDirs.Length)){
+        Write-Host "Not a valid list item."
+    } else {
+        $dir = $savedDirs[$dirIndex]
+        if (Test-Path -Path $dir) {
+            Set-Location $dir
+            Clear-Host
+        } else {
+            Write-Host "Directory not found"
+        }
+    }
+} 
+elseif ($args[0] -eq "del") {
     if ($args[1] -match "^\d+$") {
         $indexToRemove = $args[1] - 1
         if ($indexToRemove -ge 0 -and $indexToRemove -lt $savedDirs.Length) {
+
             if ($indexToRemove -eq 0){
-                $savedDirs = $savedDirs[1..($savedDirs.Length)] # TODO: The first element does get removed
-                Write-Host "First entry deleted."
+                $savedDirs = $savedDirs[1..($savedDirs.Length)]
             } else {
                 $savedDirs = $savedDirs[0..($indexToRemove - 1)] + $savedDirs[($indexToRemove + 1)..($savedDirs.Length)]
-                $savedDirs | Set-Content $projectSwapperFile
-                Write-Host "Entry deleted."
             }
+
+            Set-Content -Path $projectSwapperFile -Value $savedDirs
+            Write-Host "Entry deleted."
+
         } else {
             Write-Host "Not valid number."
         }
     } else {
         Write-Host "Please provide a valid entry number."
     }
-} else {
+} 
+else {
     Write-Host "Usage: pjs [<number>|del <number>|save|list]"
 }
