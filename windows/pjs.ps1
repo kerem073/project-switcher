@@ -25,7 +25,7 @@ elseif ($args[0] -eq "list") {
 }
 elseif ($args[0] -match "^\d+$") {
     $dirIndex = $args[0] - 1
-    if (($dirIndex -lt 0) -or ($dirIndex -gt $savedDirs.Length)){
+    if (($dirIndex -lt 0) -or ($dirIndex -ge $savedDirs.Length)){
         Write-Host "Not a valid list item."
     } else {
         $dir = $savedDirs[$dirIndex]
